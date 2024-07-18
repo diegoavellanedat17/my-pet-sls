@@ -1,0 +1,25 @@
+service: my-pet-sls
+
+plugins:
+  - serverless-offline
+  - serverless-plugin-optimize
+
+provider:
+  name: aws
+  runtime: nodejs20.x
+
+package:
+  exclude:
+    - node_modules/**
+    - .git/**
+    - .vscode/**
+    - tests/**
+    - docs/**
+
+functions:
+  api:
+    handler: dist/handler.handler
+    events:
+      - httpApi:
+          path: /hello
+          method: get
