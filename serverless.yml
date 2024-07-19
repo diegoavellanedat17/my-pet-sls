@@ -23,9 +23,9 @@ custom:
     includeModules: true
 
 functions:
-  helloWorld:
+  health:
     handler: dist/handler.handler
     events:
       - httpApi:
-          path: /hello
+          path: /health
           method: get
