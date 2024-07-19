@@ -1,9 +1,9 @@
-name: Deploy to AWS
+name: Deploy Serverless
 
 on:
   push:
     branches:
-      - main
+      - main # Set this to the branch you want to trigger deployment from
 
 jobs:
   deploy:
@@ -16,31 +16,17 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '18.x'
+          node-version: '20'
 
       - name: Install dependencies
         run: npm install
 
-      - name: Install Serverless Framework
-        run: npm install -g serverless
-
-      - name: Configure AWS Credentials
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        run: |
-          aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
-          aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
-          aws configure set default.region ${{ secrets.AWS_REGION }}
-
-      - name: Configure Serverless Framework Access Key
-        env:
-          SERVERLESS_ACCESS_KEY: ${{ secrets.SERVERLESS_ACCESS_KEY }}
-        run: serverless config credentials --provider aws --key ${{ secrets.AWS_ACCESS_KEY_ID }} --secret ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      - name: Build project
+        run: npm run build
 
       - name: Deploy to AWS
-        run: serverless deploy --stage dev --region ${{ secrets.AWS_REGION }}
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          SERVERLESS_ACCESS_KEY: ${{ secrets.SERVERLESS_ACCESS_KEY }}
+          AWS_REGION: us-east-1
+        run: npx serverless deploy
