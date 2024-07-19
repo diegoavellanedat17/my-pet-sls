@@ -24,6 +24,9 @@ jobs:
       - name: Install Serverless Framework
         run: npm install -g serverless
 
+      - name: Configure Serverless Framework with access key
+        run: serverless config credentials --provider aws --key ${{ secrets.SERVERLESS_ACCESS_KEY }}
+
       - name: Deploy to AWS
         run: serverless deploy --stage dev --region ${{ secrets.AWS_REGION }}
         env:
